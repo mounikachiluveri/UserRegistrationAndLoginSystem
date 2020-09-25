@@ -65,9 +65,32 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
         dispatcher.forward(request, response);
     }
+
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
         dispatcher.forward(request, response);
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        User existingUser = userDAO.selectUser(id);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user-form.jsp");
+        request.setAttribute("user", existingUser);
+        dispatcher.forward(request, response);
+
+    }
+
+    private void insertUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String phoneNumber = request.getParameter("phoneNumber");
+        User newUser = new User(firstName,lastName, email, password,phoneNumber);
+        userDAO.insertUser(newUser);
+        response.sendRedirect("list");
     }
 }

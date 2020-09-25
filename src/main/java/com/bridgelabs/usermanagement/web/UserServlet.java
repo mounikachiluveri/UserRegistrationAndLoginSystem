@@ -32,30 +32,37 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
 
-    }
-     try {
-        switch (action) {
-            case "/new":
-                showNewForm(request, response);
-                break;
-            case "/insert":
-                insertUser(request, response);
-                break;
-            case "/delete":
-                deleteUser(request, response);
-                break;
-            case "/edit":
-                showEditForm(request, response);
-                break;
-            case "/update":
-                updateUser(request, response);
-                break;
-            default:
-                listUser(request, response);
-                break;
+        try {
+            switch (action) {
+                case "/new":
+                    showNewForm(request, response);
+                    break;
+                case "/insert":
+                    insertUser(request, response);
+                    break;
+                case "/delete":
+                    deleteUser(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/update":
+                    updateUser(request, response);
+                    break;
+                default:
+                    listUser(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            throw new ServletException(ex);
         }
-    } catch (SQLException ex) {
-        throw new ServletException(ex);
+    }
+
+    private void listUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<User> listUser = userDAO.selectAllUsers();
+        request.setAttribute("listUser", listUser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user-list.jsp");
+        dispatcher.forward(request, response);
     }
 }
-

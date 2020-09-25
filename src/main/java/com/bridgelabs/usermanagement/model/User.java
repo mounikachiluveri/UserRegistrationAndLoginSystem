@@ -9,8 +9,6 @@ public class User {
     protected String phoneNumber;
 
 
-    public User() {
-    }
 
     public User(String firstName, String lastName, String email,String password,String phoneNumber) {
         super();
@@ -29,6 +27,12 @@ public class User {
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+
     }
 
     public int getId() {

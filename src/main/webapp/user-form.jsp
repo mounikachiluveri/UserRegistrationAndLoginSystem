@@ -69,7 +69,7 @@
                                                          name="email">
                     </fieldset>
                         <fieldset class="form-group">
-                            <label>User Password</label> <input type="text"
+                            <label>User Password</label> <input type="password"
                                                              value="<c:out value='${user.password}' />" class="form-control"
                                                              name="password">
                         </fieldset>
@@ -80,7 +80,7 @@
                                                            name="phoneNumber">
                     </fieldset>
 
-                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="submit" class="btn btn-success">Register</button>
                 </form>
         </div>
     </div>

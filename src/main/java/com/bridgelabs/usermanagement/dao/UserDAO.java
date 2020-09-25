@@ -17,7 +17,7 @@ public class UserDAO {
 
     private static final String INSERT_USERS_SQL = "INSERT INTO user" + "  (firstName,lastName,email,password,phoneNumber) VALUES "
             + " (?, ?, ?,?,?);";
-
+    private static final String SELECT_PERSON_QUERY = "select * from UserDetails where email = ? and password = ?";
     private static final String SELECT_USER_BY_ID = "select id,firstName,lastName,email,password,phoneNumber from user where id =?";
     private static final String SELECT_ALL_USERS = "select * from user";
     private static final String DELETE_USERS_SQL = "delete from user where id = ?;";
@@ -51,7 +51,6 @@ public class UserDAO {
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getPhoneNumber());
-            System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             printSQLException(e);
@@ -68,7 +67,6 @@ public class UserDAO {
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
             ResultSet rs = preparedStatement.executeQuery();
-
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
                 String firstName = rs.getString("firstName");
@@ -76,7 +74,7 @@ public class UserDAO {
                 String email = rs.getString("email");
                 String password = rs.getString("password");
                 String phoneNumber = rs.getString("phoneNumber");
-                user = new User(id, firstName,lastName,email,password,phoneNumber);
+                user = new User(id, firstName, lastName, email, password, phoneNumber);
             }
         } catch (SQLException e) {
             printSQLException(e);
@@ -84,13 +82,48 @@ public class UserDAO {
         return user;
     }
 
+    public int loginuser(User user) {
+        int count = 0;
+        // Step 1: Establishing a Connection
+        try (Connection connection = getConnection();
+             // Step 2:Create a statement using connection object
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PERSON_QUERY)){
+            int counter = 1;
+            preparedStatement.setString(counter++, user.getEmail());
+            preparedStatement.setString(counter, user.getPassword());
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public boolean validate(User loguser) throws ClassNotFoundException {
+        boolean status = false;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PERSON_QUERY)){
+            preparedStatement.setString(1, loguser.getEmail());
+            preparedStatement.setString(2, loguser.getPassword());
+            System.out.println(preparedStatement);
+            ResultSet rs = preparedStatement.executeQuery();
+            status = rs.next();
+        } catch (SQLException e) {
+            // process sql exception
+            printSQLException(e);
+        }
+        return status;
+    }
+
+
     public List<User> selectAllUsers() {
 
         // using try-with-resources to avoid closing resources (boiler plate code)
         List<User> users = new ArrayList<>();
         // Step 1: Establishing a Connection
         try (Connection connection = getConnection();
-
              // Step 2:Create a statement using connection object
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);) {
             System.out.println(preparedStatement);
@@ -105,7 +138,7 @@ public class UserDAO {
                 String email = rs.getString("email");
                 String password = rs.getString("password");
                 String phoneNumber = rs.getString("phoneNumber");
-                users.add(new User(id, firstName, lastName, email, password,phoneNumber));
+                users.add(new User(id, firstName, lastName, email, password, phoneNumber));
             }
         } catch (SQLException e) {
             printSQLException(e);

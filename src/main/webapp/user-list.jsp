@@ -37,6 +37,8 @@
 
             <a href="<%=request.getContextPath()%>/new" class="btn btn-success">Add
                 New User</a>
+            <a href="<%=request.getContextPath()%>/login" class="btn btn-success">Login
+                User</a>
         </div>
         <br>
         <table class="table table-bordered">
@@ -63,13 +65,12 @@
                     <td><c:out value="${user.password}" /></td>
                     <td><c:out value="${user.phoneNumber}" /></td>
                     <td><a href="edit?id=<c:out value='${user.id}' />">Edit</a>
-                        &nbsp;&nbsp;&nbsp;&nbsp; <a
-                                href="delete?id=<c:out value='${user.id}' />">Delete</a></td>
+                        &nbsp;&nbsp;&nbsp;&nbsp; <a href="delete?id=<c:out value='${user.id}' />">Delete</a></td>
+
                 </tr>
             </c:forEach>
             <!-- } -->
             </tbody>
-
         </table>
     </div>
 </div>
